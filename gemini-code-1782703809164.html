@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RichBumz Matrix Engine v1.0</title>
+    <title>RichBumz Matrix Engine v1.1</title>
     <style>
         :root {
             --bg-dark: #0a0a0c;
@@ -49,10 +49,10 @@
         <header class="matrix-header">
             <div class="brand-node">
                 <span class="status-indicator pulsing"></span>
-                <h1>RICHBUMZ // MAIN_FRAME_v1.0</h1>
+                <h1>RICHBUMZ // MAIN_FRAME_v1.1</h1>
             </div>
             <div class="system-stats">
-                <div class="stat-box"> PIPELINE: <span id="input-status">CALIBRATED</span></div>
+                <div class="stat-box"> SYS_LOAD: <span id="sys-load">0.00%</span></div>
                 <div class="stat-box"> VAULT CORES: <span id="node-count">0/50</span></div>
             </div>
         </header>
@@ -60,7 +60,7 @@
             <div class="scanline"></div>
         </main>
         <footer class="control-panel">
-            <div class="console-output" id="console-output">&gt; Mainframe boot sequence complete.<br>&gt; IQ200 Vault Architecture Engine initialized.</div>
+            <div class="console-output" id="console-output">&gt; System initialized. Monitoring WODA architecture...</div>
             <div class="action-bar">
                 <button class="btn-terminal" id="btn-deploy">DEPLOY NODE NETWORK</button>
                 <button class="btn-terminal" style="border-color: #6e6e73; color: #6e6e73;" id="btn-clear">FLUSH MEMORY</button>
@@ -69,14 +69,15 @@
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const w = document.getElementById('grid-workspace'), c = document.getElementById('console-output'), n = document.getElementById('node-count'), bd = document.getElementById('btn-deploy'), bc = document.getElementById('btn-clear');
+            const w = document.getElementById('grid-workspace'), c = document.getElementById('console-output'), n = document.getElementById('node-count'), l = document.getElementById('sys-load'), bd = document.getElementById('btn-deploy'), bc = document.getElementById('btn-clear');
             let t = 0; const m = 50;
-            const brandLogs = ["Ecosystem status: ACTIVE DEPLOY | Env: RichBumz Media Delivery Pipeline", "Dismantling market errors: Overwriting the visual SCAM framework.", "Calibrating system parameters: Replacing flat, uncalibrated default outputs with deep multidimensional vectors.", "Optimizing distribution lanes: Structuring core frameworks for mid-2026 high-retention video channels."];
+            const logs = ["SYSTEM: WODA architecture optimized.", "STATUS: StandardOnly7 ecosystem active.", "LOG: Synchronizing Bakersfield-NYC data nodes...", "ALERT: Sniper entry protocols engaged.", "TASK: Automating RichBumz content delivery."];
             function u(msg) { const ts = new Date().toLocaleTimeString(); c.innerHTML += `<br><span style="color:#4a4a52;">[${ts}]</span> <span style="color:#00ff66;">&gt;</span> ${msg}`; c.scrollTop = c.scrollHeight; }
+            setInterval(() => { l.textContent = (Math.random() * 15 + 40).toFixed(2) + "%"; if(Math.random() > 0.7) u(logs[Math.floor(Math.random()*logs.length)]); }, 3000);
             function o(x, y, auto = false) { if (t >= m) return; t++; n.textContent = `${t}/${m}`; const el = document.createElement('div'); el.classList.add('data-node'); el.style.left = `${x}px`; el.style.top = `${y}px`; w.appendChild(el); setTimeout(() => { el.classList.add('active'); u(auto ? `Automated architecture mapped: [${Math.round(x)}, ${Math.round(y)}]` : `Manual data anchor pinned: [${Math.round(x)}, ${Math.round(y)}]`); }, 50); }
             w.addEventListener('click', (e) => { if (e.target !== w) return; const r = w.getBoundingClientRect(); o(e.clientX - r.left, e.clientY - r.top, false); });
-            bd.addEventListener('click', () => { u("Initializing digital publishing infrastructure mapping..."); let cnt = 0; const inv = setInterval(() => { if (cnt >= 6 || t >= m) { clearInterval(inv); u("Ecosystem components locked. Operations nominal."); return; } o(Math.random() * (w.clientWidth - 20) + 10, Math.random() * (w.clientHeight - 20) + 10, true); cnt++; }, 350); });
-            bc.addEventListener('click', () => { document.querySelectorAll('.data-node').forEach(e => e.remove()); t = 0; n.textContent = `0/${m}`; c.innerHTML = `&gt; Mainframe memory flushed.<br>&gt; Ready to sequence infrastructure anchors...`; });
+            bd.addEventListener('click', () => { let cnt = 0; const inv = setInterval(() => { if (cnt >= 6 || t >= m) { clearInterval(inv); return; } o(Math.random() * (w.clientWidth - 20) + 10, Math.random() * (w.clientHeight - 20) + 10, true); cnt++; }, 350); });
+            bc.addEventListener('click', () => { document.querySelectorAll('.data-node').forEach(e => e.remove()); t = 0; n.textContent = `0/${m}`; u("Mainframe memory flushed. Ready for re-deployment."); });
         });
     </script>
 </body>
