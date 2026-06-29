@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RichBumz Matrix Engine v1.0</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0c;
+            --panel-dark: #121215;
+            --accent-green: #00ff66;
+            --accent-glow: rgba(0, 255, 102, 0.2);
+            --text-muted: #6e6e73;
+            --text-light: #f5f5f7;
+            --border-color: #26262b;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace; }
+        body { background-color: var(--bg-dark); color: var(--text-light); height: 100vh; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+        
+        .terminal-container { width: 95vw; height: 90vh; max-width: 1400px; background-color: var(--panel-dark); border: 1px solid var(--border-color); border-radius: 8px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); display: flex; flex-direction: column; position: relative; }
+        
+        .matrix-header { padding: 15px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; background: #0d0d10; }
+        .brand-node { display: flex; align-items: center; gap: 10px; }
+        .brand-node h1 { font-size: 14px; letter-spacing: 2px; color: var(--text-light); }
+        .status-indicator { width: 8px; height: 8px; background-color: var(--accent-green); border-radius: 50%; box-shadow: 0 0 8px var(--accent-green); }
+        .pulsing { animation: pulse 2s infinite ease-in-out; }
+        
+        .system-stats { display: flex; gap: 20px; font-size: 12px; }
+        .stat-box { border: 1px solid var(--border-color); padding: 6px 12px; background: rgba(25, 25, 30, 0.5); }
+        .stat-box span { color: var(--accent-green); font-weight: bold; }
+        
+        .grid-workspace { flex: 1; position: relative; background: radial-gradient(circle at center, #16161a 0%, #0a0a0c 100%); overflow: hidden; border-bottom: 1px solid var(--border-color); cursor: crosshair; }
+        .scanline { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%); background-size: 100% 4px; z-index: 10; pointer-events: none; }
+        
+        .data-node { position: absolute; width: 12px; height: 12px; background-color: #fff; border: 2px solid var(--bg-dark); border-radius: 50%; transform: translate(-50%, -50%) scale(0); transition: transform .4s cubic-bezier(.175, .885, .32, 1.275), background-color .3s; z-index: 5; }
+        .data-node.active { transform: translate(-50%, -50%) scale(1); background-color: var(--accent-green); box-shadow: 0 0 15px var(--accent-green); }
+        
+        .control-panel { padding: 20px; background-color: #0d0d10; display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .console-output { flex: 1; height: 65px; overflow-y: auto; font-size: 11px; color: var(--text-muted); line-height: 1.6; background: #060608; padding: 10px; border: 1px solid #1a1a20; border-radius: 4px; }
+        .action-bar { display: flex; gap: 10px; }
+        .btn-terminal { background: transparent; border: 1px solid var(--accent-green); color: var(--accent-green); padding: 12px 24px; font-size: 11px; font-weight: bold; letter-spacing: 1px; cursor: pointer; transition: all .3s ease; }
+        .btn-terminal:hover { background: var(--accent-green); color: var(--bg-dark); box-shadow: 0 0 15px var(--accent-glow); }
+        
+        @keyframes pulse { 0%, 100% { opacity: .5; } 50% { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="terminal-container">
+        <header class="matrix-header">
+            <div class="brand-node">
+                <span class="status-indicator pulsing"></span>
+                <h1>RICHBUMZ // MAIN_FRAME_v1.0</h1>
+            </div>
+            <div class="system-stats">
+                <div class="stat-box"> PIPELINE: <span id="input-status">CALIBRATED</span></div>
+                <div class="stat-box"> VAULT CORES: <span id="node-count">0/50</span></div>
+            </div>
+        </header>
+        <main class="grid-workspace" id="grid-workspace">
+            <div class="scanline"></div>
+        </main>
+        <footer class="control-panel">
+            <div class="console-output" id="console-output">&gt; Mainframe boot sequence complete.<br>&gt; IQ200 Vault Architecture Engine initialized.</div>
+            <div class="action-bar">
+                <button class="btn-terminal" id="btn-deploy">DEPLOY NODE NETWORK</button>
+                <button class="btn-terminal" style="border-color: #6e6e73; color: #6e6e73;" id="btn-clear">FLUSH MEMORY</button>
+            </div>
+        </footer>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const w = document.getElementById('grid-workspace'), c = document.getElementById('console-output'), n = document.getElementById('node-count'), bd = document.getElementById('btn-deploy'), bc = document.getElementById('btn-clear');
+            let t = 0; const m = 50;
+            const brandLogs = ["Ecosystem status: ACTIVE DEPLOY | Env: RichBumz Media Delivery Pipeline", "Dismantling market errors: Overwriting the visual SCAM framework.", "Calibrating system parameters: Replacing flat, uncalibrated default outputs with deep multidimensional vectors.", "Optimizing distribution lanes: Structuring core frameworks for mid-2026 high-retention video channels."];
+            function u(msg) { const ts = new Date().toLocaleTimeString(); c.innerHTML += `<br><span style="color:#4a4a52;">[${ts}]</span> <span style="color:#00ff66;">&gt;</span> ${msg}`; c.scrollTop = c.scrollHeight; }
+            function o(x, y, auto = false) { if (t >= m) return; t++; n.textContent = `${t}/${m}`; const el = document.createElement('div'); el.classList.add('data-node'); el.style.left = `${x}px`; el.style.top = `${y}px`; w.appendChild(el); setTimeout(() => { el.classList.add('active'); u(auto ? `Automated architecture mapped: [${Math.round(x)}, ${Math.round(y)}]` : `Manual data anchor pinned: [${Math.round(x)}, ${Math.round(y)}]`); }, 50); }
+            w.addEventListener('click', (e) => { if (e.target !== w) return; const r = w.getBoundingClientRect(); o(e.clientX - r.left, e.clientY - r.top, false); });
+            bd.addEventListener('click', () => { u("Initializing digital publishing infrastructure mapping..."); let cnt = 0; const inv = setInterval(() => { if (cnt >= 6 || t >= m) { clearInterval(inv); u("Ecosystem components locked. Operations nominal."); return; } o(Math.random() * (w.clientWidth - 20) + 10, Math.random() * (w.clientHeight - 20) + 10, true); cnt++; }, 350); });
+            bc.addEventListener('click', () => { document.querySelectorAll('.data-node').forEach(e => e.remove()); t = 0; n.textContent = `0/${m}`; c.innerHTML = `&gt; Mainframe memory flushed.<br>&gt; Ready to sequence infrastructure anchors...`; });
+        });
+    </script>
+</body>
+</html>
